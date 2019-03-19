@@ -42,7 +42,7 @@ enum {
 #endif
 
 
-#if defined(_MSC_VER) && !defined(__clang__) && !defined(_WIN64)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(_WIN64) && !defined(ROARING_ACK_32BIT)
 #pragma message( \
     "You appear to be attempting a 32-bit build under Visual Studio. We recommend a 64-bit build instead.")
 #endif
@@ -2799,7 +2799,7 @@ static inline void run_container_remove_range(run_container_t *run, uint32_t min
     int32_t last = rle16_find_run(run->runs, run->n_runs, max);
 
     if (first >= 0 && min > run->runs[first].value &&
-        max < run->runs[first].value + run->runs[first].length) {
+        max < ((uint32_t)run->runs[first].value + (uint32_t)run->runs[first].length)) {
         // split this run into two adjacent runs
 
         // right subinterval
